@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Development environment
+  dev:
+    platform: linux/arm64
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - go-mod-cache:/go/pkg/mod
+      - node-modules:/app/frontend/node_modules
+    ports:
+      - "8080:8080"  # Proxy port
+      - "3000:3000"  # Frontend dev server
+      - "34115:34115"  # Wails debug port
+    environment:
+      - GOOS=darwin
+      - GOARCH=arm64
+    command: wails dev
+
+  # Production build
+  build:
+    platform: linux/arm64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./build:/app/build
+    environment:
+      - GOOS=darwin
+      - GOARCH=arm64
+      - CGO_ENABLED=1
+    command: echo "Build completed. The binary is available in the build directory."
+
+volumes:
+  go-mod-cache:
+  node-modules: 

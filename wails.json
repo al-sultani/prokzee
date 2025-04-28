@@ -1,0 +1,19 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "ProKZee",
+  "outputfilename": "ProKZee",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "Abdullah Al-Sultani",
+    "email": "abdullah@alsultani.me"
+  },
+  "platform": "desktop",
+  "build": {
+    "goTags": "",
+    "ldflags": "",
+    "outputType": "desktop"
+  }
+}

@@ -1,0 +1,111 @@
+html, body {
+    @apply bg-white dark:bg-dark-primary text-gray-900 dark:text-gray-100;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#app {
+    height: 100vh;
+    text-align: center;
+    overflow: hidden;
+    @apply bg-white dark:bg-dark-primary;
+}
+
+body::-webkit-scrollbar { 
+    display: none; 
+}
+
+#logo {
+    display: block;
+    width: 50%;
+    height: 50%;
+    margin: auto;
+    padding: 10% 0 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-origin: content-box;
+}
+
+.result {
+    height: 20px;
+    line-height: 20px;
+    margin: 1.5rem auto;
+    @apply text-gray-900 dark:text-gray-100;
+}
+
+.input-box .btn {
+    width: 60px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    border: none;
+    margin: 0 0 0 20px;
+    padding: 0 8px;
+    cursor: pointer;
+    @apply bg-gray-100 dark:bg-dark-accent text-gray-900 dark:text-gray-100;
+}
+
+.input-box .btn:hover {
+    @apply bg-gray-200 dark:bg-dark-secondary;
+}
+
+.input-box .input {
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    @apply bg-gray-50 dark:bg-dark-accent text-gray-900 dark:text-gray-100;
+    -webkit-font-smoothing: antialiased;
+}
+
+.input-box .input:hover {
+    border: none;
+    @apply bg-white dark:bg-dark-secondary;
+}
+
+.input-box .input:focus {
+    border: none;
+    @apply bg-white dark:bg-dark-secondary;
+}
+
+.domain-list-scrollable {
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+.break-word {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+.highlight-method {
+    @apply text-red-600 dark:text-red-400 font-bold;
+}
+  
+.highlight-url {
+    @apply text-blue-600 dark:text-blue-400;
+}
+  
+.highlight-protocol {
+    @apply text-purple-600 dark:text-purple-400;
+}
+  
+.highlight-header-name {
+    @apply text-orange-600 dark:text-orange-400;
+}
+  
+.highlight-header-value {
+    @apply text-blue-800 dark:text-blue-300;
+}
+  
+.highlight-body {
+    @apply text-gray-900 dark:text-gray-100;
+    white-space: pre-wrap;
+}
+

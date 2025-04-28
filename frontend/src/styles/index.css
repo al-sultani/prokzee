@@ -1,0 +1,87 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+html {
+  @apply bg-white dark:bg-dark-primary text-gray-900 dark:text-gray-100;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  @apply bg-white dark:bg-dark-primary text-gray-900 dark:text-gray-100;
+}
+
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  src: local(""),
+    url("../assets/fonts/nunito-v16-latin-regular.woff2") format("woff2");
+}
+
+#app {
+  height: 100vh;
+  text-align: center;
+  @apply bg-white dark:bg-dark-primary;
+}
+
+.editor-container {
+  padding-left: 8px;
+}
+
+#editor-container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  @apply bg-white dark:bg-dark-primary text-gray-900 dark:text-gray-100;
+}
+
+.header {
+    @apply font-bold text-blue-500;
+}
+
+.value {
+    @apply text-green-500;
+}
+
+.body {
+    @apply text-red-500;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-dark-secondary;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-dark-accent;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-600;
+}
+
+/* Hide scrollbar for body but keep functionality */
+body::-webkit-scrollbar {
+  display: none;
+}

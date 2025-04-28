@@ -1,0 +1,9 @@
+*.db
+!default_project.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.db-trace
+*.db-trace-journal
+*.db-trace-shm
+*.db-trace-wal

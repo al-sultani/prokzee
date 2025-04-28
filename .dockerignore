@@ -1,0 +1,30 @@
+# Version control
+.git
+.gitignore
+
+# Build outputs
+build/
+frontend/dist/
+frontend/node_modules/
+
+# Development files
+*.log
+.env
+.env.*
+*.pem
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files
+Dockerfile
+Dockerfile.dev
+docker-compose.yml
+.dockerignore 

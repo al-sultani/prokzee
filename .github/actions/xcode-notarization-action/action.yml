@@ -1,0 +1,114 @@
+# Modified from cocoalibs/xcode-notarization-action@1.0.3
+name: 'Xcode Codesign, Notarize, and Staple Action'
+description: 'Given an .app, performs codesigning, notarization, and stapling to produce a .zip and .dmg'
+branding:
+  icon: 'award'
+  color: 'green'
+
+inputs:
+  build-name:
+    description: 'Path of the software to notarize. Globbing is supported'
+    requires: true
+  staple:
+    description: 'Whether to run `stapler staple`'
+    requires: true
+    default: 'true'
+  keychain-profile:
+    description: 'notarytool --keychain-profile parameter'
+    required: true
+    default: 'notary'
+  apple-id:
+    description: 'notarytool --apple-id parameter'
+    required: true
+  password:
+    description: 'notarytool --password parameter'
+    required: true
+  team-id:
+    description: 'notarytool --team-id parameter'
+    required: true
+  xcode-path:
+    description: 'Path of the Xcode version to use'
+    required: true
+    default: '/Applications/Xcode_13.2.1.app' # available on both macos-11 and macos-12 environments
+  p12-file-base64:
+    description: 'The certificates in a PKCS12 file encoded as a base64 string.'
+    required: true
+  p12-password:
+    description: 'The password used to import the PKCS12 file.'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Xcode
+      run: sudo xcode-select -s ${{ inputs.xcode-path }}
+      shell: bash
+    - name: Prepare Notarization Credentials
+      id: create-keychain
+      run: |
+        # create temporary keychain
+        KEYCHAIN_PATH=$RUNNER_TEMP/notarization.keychain
+        KEYCHAIN_PASS=$(uuidgen)
+        echo "keychain-path-output=$(echo $RUNNER_TEMP)/notarization" >> $GITHUB_OUTPUT
+        security create-keychain -p "${KEYCHAIN_PASS}" ${KEYCHAIN_PATH}
+        security set-keychain-settings -lut 900 ${KEYCHAIN_PATH}
+        security unlock-keychain -p "${KEYCHAIN_PASS}" ${KEYCHAIN_PATH}
+        # debugging credential format - masking sensitive data
+        echo "Apple ID format check: ${#APPLE_ID} characters"
+        echo "Password format check: ${#APPLE_PASSWORD} characters (is empty: $([[ -z '${{ inputs.password }}' ]] && echo 'yes' || echo 'no'))"
+        echo "Team ID format check: ${#TEAM_ID} characters"
+        # import credentials from secrets
+        xcrun notarytool store-credentials "${{ inputs.keychain-profile }}" --apple-id "${{ inputs.apple-id }}" --password "${{ inputs.password }}" --team-id "${{ inputs.team-id }}" --keychain "${KEYCHAIN_PATH}"
+      shell: bash
+      env:
+        APPLE_ID: "${{ inputs.apple-id }}"
+        APPLE_PASSWORD: "${{ inputs.password }}"
+        TEAM_ID: "${{ inputs.team-id }}"
+    - name: Import codesigning certificates
+      uses: apple-actions/import-codesign-certs@v3
+      with: 
+        keychain: ${{ steps.create-keychain.outputs.keychain-path-output }}
+        create-keychain: false
+        p12-file-base64: ${{ inputs.p12-file-base64 }}
+        p12-password: ${{ inputs.p12-password }}
+    - name: Codesign ${{ inputs.build-name }}.app
+      run: |
+        codesign -f -s "${{ inputs.team-id }}" -o runtime --keychain "${KEYCHAIN_PATH}" './build/bin/${{ inputs.build-name }}.app'
+      shell: bash
+    - name: Create and codesign ${{ inputs.build-name }}.dmg
+      run: |
+        brew install create-dmg
+        mkdir ./build/bin/dmg-workspace
+        ditto './build/bin/${{ inputs.build-name }}.app' './build/bin/dmg-workspace/${{ inputs.build-name }}.app' 
+        create-dmg \
+          --volname "Install ${{ inputs.build-name }}" \
+          --window-pos 200 120 \
+          --window-size 800 400 \
+          --icon-size 100 \
+          --icon "${{ inputs.build-name }}.app" 200 190 \
+          --hide-extension "${{ inputs.build-name }}.app" \
+          --app-drop-link 600 185 \
+          --codesign "${{ inputs.team-id }}" \
+          "./build/bin/${{ inputs.build-name }}.dmg" \
+          "./build/bin/dmg-workspace"
+      shell: bash
+    - name: Notarize ${{ inputs.build-name }}.dmg
+      run: |
+        KEYCHAIN_PATH=$RUNNER_TEMP/notarization.keychain
+        xcrun notarytool submit './build/bin/${{ inputs.build-name }}.dmg' --keychain-profile "${{ inputs.keychain-profile }}" --keychain "${KEYCHAIN_PATH}" --wait
+      shell: bash
+    - name: Staple ${{ inputs.build-name }}.dmg
+      if: ${{ inputs.staple == 'true' }}
+      run: xcrun stapler staple './build/bin/${{ inputs.build-name }}.dmg'
+      shell: bash
+    - name: Staple .app and create ${{ inputs.build-name }}.app.zip
+      if: ${{ inputs.staple == 'true' }}
+      run: |
+        xcrun stapler staple './build/bin/${{ inputs.build-name }}.app'
+        ditto -c -k --keepParent './build/bin/${{inputs.build-name}}.app' './build/bin/${{inputs.build-name}}.app.zip'
+      shell: bash
+    - name: Cleanup
+      if: ${{ always() }}
+      run: security delete-keychain $RUNNER_TEMP/notarization.keychain
+      shell: bash
+      continue-on-error: true

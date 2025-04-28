@@ -1,0 +1,48 @@
+:root {
+  /* Light theme variables */
+  --editor-bg: #ffffff;
+  --editor-text: #000000;
+  --editor-selection: #b3d4fc;
+  --editor-gutter-bg: #f8f8f8;
+  --editor-gutter-text: #999999;
+  --editor-active-line-gutter: #e8e8e8;
+  --editor-keyword: #0000FF;
+  --editor-string: #FF0000;
+  --editor-number: #FF0000;
+  --editor-property: #0000FF;
+  --editor-variable: #0000FF;
+  --editor-comment: #008000;
+  --editor-tag: #0000FF;
+  --editor-attribute: #0000FF;
+  --editor-attribute-value: #FF0000;
+  --editor-header-name: blue;
+  --editor-header-value: #FF0000;
+  --editor-status: #008B8B;
+}
+
+/* Dark theme variables */
+:root.dark {
+  --editor-bg: #1e1e1e;
+  --editor-text: #e4e4e4;
+  --editor-selection: #264f78;
+  --editor-gutter-bg: #1e1e1e;
+  --editor-gutter-text: #858585;
+  --editor-active-line-gutter: #2a2a2a;
+  --editor-keyword: #569cd6;
+  --editor-string: #ce9178;
+  --editor-number: #b5cea8;
+  --editor-property: #9cdcfe;
+  --editor-variable: #9cdcfe;
+  --editor-comment: #6a9955;
+  --editor-tag: #569cd6;
+  --editor-attribute: #9cdcfe;
+  --editor-attribute-value: #ce9178;
+  --editor-header-name: rgb(86, 156, 214);
+  --editor-header-value: #ce9178;
+  --editor-status: #4ec9b0;
+}
+
+/* Override active line background in dark mode */
+:root.dark .cm-activeLine {
+  background-color: transparent !important;
+} 

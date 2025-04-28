@@ -1,0 +1,37 @@
+# Development environment
+FROM golang:1.21
+
+# Install build essentials
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    nodejs \
+    npm \
+    pkg-config \
+    libwebkit2gtk-4.0-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install wails
+RUN go install github.com/wailsapp/wails/v2/cmd/wails@v2.9.2
+
+# Set the working directory
+WORKDIR /app
+
+# Copy go mod, sum files and goproxy directory
+COPY go.mod go.sum ./
+COPY goproxy ./goproxy/
+
+# Download Go dependencies
+RUN go mod download
+
+# Copy the frontend files
+COPY frontend/package*.json frontend/
+
+# Install frontend dependencies
+WORKDIR /app/frontend
+RUN npm install
+
+# Return to app directory
+WORKDIR /app
+
+# The rest of the application will be mounted as a volume 

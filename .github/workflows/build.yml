@@ -1,0 +1,51 @@
+name: Wails build
+
+on:
+  push:
+    tags:
+      # Match any new tag starting with v
+      - 'v*'
+
+env:
+  # Necessary for most environments as build failure can occur due to OOM issues
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+jobs:
+  build:
+    strategy:
+      # Failure in one platform build won't impact the others
+      fail-fast: false
+      matrix:
+        build:
+          - name: 'ProKZee'
+            platform:  'linux/amd64'
+            os: 'ubuntu-22.04'
+          - name: 'ProKZee'
+            platform:  'windows/amd64'
+            os: 'windows-latest'
+          - name: 'ProKZee'
+            platform:  'darwin/universal'
+            os: 'macos-latest'
+
+    runs-on: ${{ matrix.build.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Build wails
+        uses: ./.github/actions/wails-build-action
+        id: build
+        with:
+          build-name: ${{ matrix.build.name }}
+          build-platform: ${{ matrix.build.platform }}
+          package: true
+          build: true
+          wails-version: 'v2.9.2'
+          go-version: '1.23'
+          sign-macos-apple-id: ${{ secrets.APPLE_ID }}
+          sign-macos-apple-id-password: ${{ secrets.APPLE_PASSWORD }}
+          sign-macos-apple-team-id: ${{ secrets.APPLE_TEAM_ID }}
+          p12-file-base64: ${{ secrets.P12_FILE_BASE64 }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
