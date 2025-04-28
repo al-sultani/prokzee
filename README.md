@@ -13,7 +13,7 @@
 
 A powerful and modern cross-platform desktop application for HTTP/HTTPS traffic interception and analysis, built with Go and React. 
 
-[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Development](#development) • [Contributing](#contributing) • [Docker Support](#docker-support) • [Issues](#issues) • [License](#license) • [Author](#author)
+[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Development](#development) • [Contributing](#contributing) • [Docker Support](#docker-support) • [Issues](#issues) • [Roadmap](#roadmap) • [License](#license) • [Author](#author)
 <!-- Change to GIF -->
 ![ProKZee Screenshot](docs/screenshots/1.png)
 
@@ -197,6 +197,10 @@ We're constantly working to improve ProKZee and value your input! Please feel fr
 - Report documentation issues
 
 To submit an issue, please visit our [Issues page](https://github.com/al-sultani/prokzee/issues) and provide as much detail as possible to help us understand and address your concerns.
+
+## <a id="roadmap"></a> 🗺️ Roadmap
+
+Check out our [Roadmap](/docs/ROADMAP.md) to see what features and improvements are planned for future releases.
 
 ## <a id="license"></a> 📝 License
 
